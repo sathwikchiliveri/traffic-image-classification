@@ -1,51 +1,27 @@
 """
-test.py
+train.py
 
-Quick test to verify that the dataset,
-dataloader, and model are working correctly.
+Training script for Traffic Image Classification
 """
 
 import torch
+import torch.nn as nn
+import torch.optim as optim
 
-from dataset import load_datasets, create_dataloaders
+from dataset import (
+    load_datasets,
+    create_dataloaders
+)
+
 from model import TrafficCNN
 
-from config import TRAIN_DIR, VALID_DIR, TEST_DIR
-
+from config import *
 
 def main():
 
-    # Load datasets
-    train_dataset, valid_dataset, test_dataset = load_datasets(
-        TRAIN_DIR,
-        VALID_DIR,
-        TEST_DIR
-    )
-
-    # Create dataloaders
-    train_loader, _, _ = create_dataloaders(
-        train_dataset,
-        valid_dataset,
-        test_dataset
-    )
-
-    # Create model
-    model = TrafficCNN()
-
-    # Get one batch
-    images, labels = next(iter(train_loader))
-
-    print("=" * 50)
-    print("Input Shape :", images.shape)
-    print("Labels Shape:", labels.shape)
-
-    outputs = model(images)
-
-    print("Output Shape:", outputs.shape)
-
-    print("=" * 50)
-    print("Classes:", train_dataset.classes)
-
+    print("="*50)
+    print("Traffic Image Classification")
+    print("="*50)
 
 if __name__ == "__main__":
     main()
