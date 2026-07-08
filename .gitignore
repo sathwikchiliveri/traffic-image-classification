@@ -1,0 +1,13 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Dataset
+Data/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Outputs
+outputs/
