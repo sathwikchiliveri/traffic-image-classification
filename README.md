@@ -53,3 +53,60 @@ traffic-image-classification
 ├── README.md
 └── LICENSE
 ```
+## 🧠 Model Architecture
+
+Custom CNN
+
+Input (128×128×3)
+
+↓
+
+Conv2D (32 Filters)
+
+↓
+
+ReLU
+
+↓
+
+MaxPooling
+
+↓
+
+Conv2D (64 Filters)
+
+↓
+
+ReLU
+
+↓
+
+MaxPooling
+
+↓
+
+Conv2D (128 Filters)
+
+↓
+
+ReLU
+
+↓
+
+MaxPooling
+
+↓
+
+Adaptive Average Pooling
+
+↓
+
+Fully Connected Layer
+
+↓
+
+Dropout (0.5)
+
+↓
+
+Output Layer (5 Classes)
