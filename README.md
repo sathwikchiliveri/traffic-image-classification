@@ -175,22 +175,6 @@ After fine-tuning the last residual block (`layer4`) together with the classifie
 - Classification Report
 - Single Image Prediction
 
-## 📈 Training Accuracy
-
-![Accuracy](outputs/graphs/accuracy_curve.png)
-
----
-
-## 📉 Training Loss
-
-![Loss](outputs/graphs/loss_curve.png)
-
----
-
-## 🔲 Confusion Matrix
-
-![Confusion Matrix](outputs/graphs/confusion_matrix.png)
-
 ## 📷 Visualizations
 
 ### Training Accuracy
