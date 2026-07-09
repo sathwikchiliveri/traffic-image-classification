@@ -154,3 +154,12 @@ Example
 Prediction : High
 Confidence : 73.74%
 ```
+## 🚀 Installation
+
+```bash
+git clone https://github.com/sathwikchiliveri/traffic-image-classification.git
+
+cd traffic-image-classification
+
+pip install -r requirements.txt
+```
