@@ -190,3 +190,12 @@ python src/predict.py
 - Flask/FastAPI deployment
 - Streamlit dashboard
 - Model comparison
+- 
+- ## 🛠️ Tech Stack
+- Python
+- PyTorch
+- Torchvision
+- NumPy
+- Pandas
+- Matplotlib
+- Scikit-learn
