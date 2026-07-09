@@ -142,3 +142,15 @@ Output Layer (5 Classes)
 ## 🔲 Confusion Matrix
 
 ![Confusion Matrix](outputs/graphs/confusion_matrix.png)
+## 🔍 Predict a Single Image
+
+```bash
+python src/predict.py
+```
+
+Example
+
+```text
+Prediction : High
+Confidence : 73.74%
+```
