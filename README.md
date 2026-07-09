@@ -110,3 +110,13 @@ Dropout (0.5)
 ↓
 
 Output Layer (5 Classes)
+## ⚙️ Training Configuration
+
+| Parameter | Value |
+|-----------|------:|
+| Epochs | 20 |
+| Batch Size | 8 |
+| Learning Rate | 0.001 |
+| Optimizer | Adam |
+| Loss Function | Weighted CrossEntropyLoss |
+| Image Size | 128×128 |
