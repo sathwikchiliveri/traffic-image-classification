@@ -182,3 +182,11 @@ Predict
 ```bash
 python src/predict.py
 ```
+## 🚀 Future Improvements
+
+- Transfer Learning using ResNet18
+- MobileNetV3 implementation
+- Real-time webcam inference
+- Flask/FastAPI deployment
+- Streamlit dashboard
+- Model comparison
