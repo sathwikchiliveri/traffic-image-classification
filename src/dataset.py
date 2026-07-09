@@ -9,14 +9,14 @@ Handles:
 
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
-
+from config import IMAGE_SIZE, BATCH_SIZE
 
 # ============================
 # Configuration
 # ============================
 
-IMAGE_SIZE = (224, 224)
-BATCH_SIZE = 32
+#IMAGE_SIZE = (224, 224)
+#BATCH_SIZE = 32
 
 
 # ============================

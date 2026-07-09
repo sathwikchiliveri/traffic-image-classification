@@ -9,9 +9,9 @@ used throughout the project.
 # Dataset
 # ===============================
 
-TRAIN_DIR = "../Data/training"
-VALID_DIR = "../Data/validation"
-TEST_DIR = "../Data/testing"
+TRAIN_DIR = "Data/training"
+VALID_DIR = "Data/validation"
+TEST_DIR = "Data/testing"
 
 # ===============================
 # Image
@@ -29,7 +29,7 @@ NUM_CLASSES = 5
 # Training
 # ===============================
 
-BATCH_SIZE = 32
+BATCH_SIZE = 16
 
 LEARNING_RATE = 0.001
 
