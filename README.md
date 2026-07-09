@@ -1,62 +1,44 @@
 # 🚦 Traffic Image Classification using Deep Learning
 
-A PyTorch-based deep learning project for multi-class traffic image classification using a custom Convolutional Neural Network (CNN). The model classifies traffic scenes into five categories and is trained using weighted cross-entropy loss to address dataset imbalance.
+A Computer Vision project that classifies traffic images into five traffic conditions using a Custom Convolutional Neural Network (CNN) built with PyTorch.
 
----
-
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![PyTorch](https://img.shields.io/badge/PyTorch-DeepLearning-red)
+![OpenCV](https://img.shields.io/badge/Computer-Vision-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 ## 📌 Project Overview
 
-Traffic monitoring plays an important role in intelligent transportation systems. This project automatically classifies traffic images into predefined traffic density categories using a custom CNN architecture built from scratch.
+This project implements a custom Convolutional Neural Network (CNN) for multi-class traffic image classification.
 
-The project demonstrates the complete deep learning workflow:
+The model classifies traffic scenes into five categories:
 
-- Data preprocessing
+- Empty Road
+- High Traffic
+- Low Traffic
+- Medium Traffic
+- Traffic Jam
+
+The complete pipeline includes:
+
+- Dataset preprocessing
 - Data augmentation
-- Custom CNN implementation
+- Custom CNN architecture
+- Weighted CrossEntropy Loss
 - Model training
-- Validation
-- Performance evaluation
+- Evaluation
 - Single image prediction
-
----
-
-## 🎯 Objectives
-
-- Build a CNN from scratch using PyTorch.
-- Classify traffic images into five categories.
-- Handle class imbalance using Weighted CrossEntropyLoss.
-- Evaluate performance using multiple metrics.
-- Create an end-to-end prediction pipeline.
-
----
-
-## 🧠 Classes
-
-| Class ID | Traffic Category |
-|----------|------------------|
-| 0 | Empty |
-| 1 | High |
-| 2 | Low |
-| 3 | Medium |
-| 4 | Traffic Jam |
-
----
-
-## 🏗 Project Structure
+- Performance visualization
+## 📂 Project Structure
 
 ```text
-traffic-image-classification/
-
-├── Data/
-│   ├── training/
-│   ├── validation/
-│   └── testing/
+traffic-image-classification
 │
+├── Notebooks/
 ├── outputs/
-│   ├── models/
-│   ├── graphs/
-│   ├── logs/
-│   └── predictions/
+│   └── graphs/
+│       ├── accuracy_curve.png
+│       ├── loss_curve.png
+│       └── confusion_matrix.png
 │
 ├── src/
 │   ├── config.py
@@ -64,31 +46,18 @@ traffic-image-classification/
 │   ├── model.py
 │   ├── train.py
 │   ├── evaluate.py
-│   └── predict.py
+│   ├── predict.py
+│   └── graphs.py
 │
+├── requirements.txt
 ├── README.md
-├── LICENSE
-└── .gitignore
+└── LICENSE
 ```
+## 🧠 Model Architecture
 
----
+Custom CNN
 
-## 🛠 Tech Stack
-
-- Python
-- PyTorch
-- TorchVision
-- NumPy
-- PIL
-- Matplotlib
-- Scikit-learn
-
----
-
-## 🧠 CNN Architecture
-
-```
-Input Image (128 × 128 × 3)
+Input (128×128×3)
 
 ↓
 
@@ -132,126 +101,104 @@ Adaptive Average Pooling
 
 ↓
 
-Flatten
+Fully Connected Layer
 
 ↓
 
-Fully Connected (64)
-
-↓
-
-Dropout
+Dropout (0.5)
 
 ↓
 
 Output Layer (5 Classes)
-```
-
----
-
-## 📊 Dataset
-
-The dataset contains traffic images categorized into five traffic density classes.
-
-### Dataset Split
-
-- Training Images: **3378**
-- Validation Images: **340**
-- Testing Images: **320**
-
----
-
-## ⚙ Training Configuration
+## ⚙️ Training Configuration
 
 | Parameter | Value |
-|-----------|-------|
-| Image Size | 128 × 128 |
-| Batch Size | 8 |
-| Optimizer | Adam |
-| Learning Rate | 0.001 |
-| Loss Function | Weighted CrossEntropyLoss |
+|-----------|------:|
 | Epochs | 20 |
-| Device | CPU |
+| Batch Size | 8 |
+| Learning Rate | 0.001 |
+| Optimizer | Adam |
+| Loss Function | Weighted CrossEntropyLoss |
+| Image Size | 128×128 |
+## 📊 Results
+
+| Metric | Value |
+|--------|------:|
+| Test Accuracy | **79.38%** |
+| Classes | 5 |
+| Framework | PyTorch |
+## 📈 Training Accuracy
+
+![Accuracy](outputs/graphs/accuracy_curve.png)
 
 ---
 
-## 📈 Results
+## 📉 Training Loss
 
-### Test Accuracy
-
-**76.88%**
-
-### Classification Performance
-
-| Class | Precision | Recall | F1-Score |
-|--------|----------:|--------:|----------:|
-| Empty | 0.84 | 0.95 | 0.89 |
-| High | 0.78 | 0.73 | 0.76 |
-| Low | 0.72 | 0.53 | 0.61 |
-| Medium | 0.63 | 0.67 | 0.65 |
-| Traffic Jam | 0.85 | 0.95 | 0.90 |
+![Loss](outputs/graphs/loss_curve.png)
 
 ---
 
-## 🚀 Run Training
+## 🔲 Confusion Matrix
 
-```bash
-python src/train.py
-```
-
----
-
-## 📊 Evaluate Model
-
-```bash
-python src/evaluate.py
-```
-
----
-
+![Confusion Matrix](outputs/graphs/confusion_matrix.png)
 ## 🔍 Predict a Single Image
 
 ```bash
 python src/predict.py
 ```
 
----
+Example
 
-## ✨ Features
+```text
+Prediction : High
+Confidence : 73.74%
+```
+## 🚀 Installation
 
-- Custom CNN Architecture
-- Data Augmentation
-- Weighted Loss for Imbalanced Dataset
-- Model Checkpoint Saving
-- Evaluation Pipeline
-- Single Image Prediction
-- Training History Logging
+```bash
+git clone https://github.com/sathwikchiliveri/traffic-image-classification.git
 
----
+cd traffic-image-classification
 
-## 📌 Future Improvements
+pip install -r requirements.txt
+```
+## ▶️ Usage
 
-- ResNet18 Transfer Learning
-- MobileNetV3 Comparison
-- Grad-CAM Visualization
-- Streamlit Web Application
-- Real-Time Traffic Classification
-- Model Quantization for Edge Deployment
+Train
 
----
+```bash
+python src/train.py
+```
 
-## 👨‍💻 Author
+Evaluate
 
-**Sathwik Chiliveri**
+```bash
+python src/evaluate.py
+```
 
-B.Tech Computer Science & Engineering
+Predict
 
-Machine Learning | Deep Learning | Computer Vision
+```bash
+python src/predict.py
+```
+## 🚀 Future Improvements
 
-GitHub: https://github.com/sathwikchiliveri
-
----
-
-## ⭐ If you found this project useful
-
-Give this repository a ⭐ on GitHub.
+- Transfer Learning using ResNet18
+- MobileNetV3 implementation
+- Real-time webcam inference
+- Flask/FastAPI deployment
+- Streamlit dashboard
+- Model comparison
+- 
+- ## 🛠️ Tech Stack
+- Python
+- PyTorch
+- Torchvision
+- NumPy
+- Pandas
+- Matplotlib
+- Scikit-learn
+- 
+- ## 📄 License
+This project is licensed under the MIT License.
