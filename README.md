@@ -127,3 +127,18 @@ Output Layer (5 Classes)
 | Test Accuracy | **79.38%** |
 | Classes | 5 |
 | Framework | PyTorch |
+## 📈 Training Accuracy
+
+![Accuracy](outputs/graphs/accuracy_curve.png)
+
+---
+
+## 📉 Training Loss
+
+![Loss](outputs/graphs/loss_curve.png)
+
+---
+
+## 🔲 Confusion Matrix
+
+![Confusion Matrix](outputs/graphs/confusion_matrix.png)
