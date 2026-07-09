@@ -7,27 +7,15 @@ A Computer Vision project that classifies traffic images into five traffic condi
 ![OpenCV](https://img.shields.io/badge/Computer-Vision-green)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 ## 📌 Project Overview
+This project implements a complete deep learning pipeline for traffic image classification using PyTorch.
 
-This project implements a custom Convolutional Neural Network (CNN) for multi-class traffic image classification.
+Two different approaches were implemented and compared:
 
-The model classifies traffic scenes into five categories:
+• A Custom Convolutional Neural Network (CNN) built from scratch.
+• A pretrained ResNet18 model using transfer learning.
 
-- Empty Road
-- High Traffic
-- Low Traffic
-- Medium Traffic
-- Traffic Jam
+The project includes dataset preprocessing, data augmentation, model training, evaluation, performance visualization, and single-image prediction.
 
-The complete pipeline includes:
-
-- Dataset preprocessing
-- Data augmentation
-- Custom CNN architecture
-- Weighted CrossEntropy Loss
-- Model training
-- Evaluation
-- Single image prediction
-- Performance visualization
 ## 📂 Project Structure
 
 ```text
@@ -110,6 +98,50 @@ Dropout (0.5)
 ↓
 
 Output Layer (5 Classes)
+
+## 🧠 Implemented Models
+
+### Custom CNN
+
+- 3 Convolution Blocks
+- ReLU
+- MaxPooling
+- Adaptive Average Pooling
+- Dropout
+- Fully Connected Layers
+
+### ResNet18
+
+- ImageNet pretrained weights
+- Fine-tuned Layer4
+- Custom Fully Connected Classifier
+
+## 📊 Model Comparison
+
+| Model | Training Strategy | Test Accuracy |
+|--------|-------------------|--------------:|
+| Custom CNN | Built from Scratch | **79.38%** |
+| ResNet18 (Classifier Only) | Transfer Learning | **66.56%** |
+| ResNet18 (Layer4 + FC Fine-Tuning) | Transfer Learning | **79.69%** |
+
+## 📈 Results
+
+### Custom CNN
+
+- Test Accuracy: **79.38%**
+
+### ResNet18 (Fine-Tuned)
+
+- Test Accuracy: **79.69%**
+
+The transfer learning approach achieved the highest accuracy on the test dataset.
+
+### Observation
+
+The initial ResNet18 experiment trained only the final classification layer and achieved 66.56% test accuracy.
+
+After fine-tuning the last residual block (`layer4`) together with the classifier using a lower learning rate, the model improved to **79.69%**, slightly outperforming the custom CNN baseline.
+
 ## ⚙️ Training Configuration
 
 | Parameter | Value |
@@ -120,6 +152,7 @@ Output Layer (5 Classes)
 | Optimizer | Adam |
 | Loss Function | Weighted CrossEntropyLoss |
 | Image Size | 128×128 |
+
 ## 📊 Results
 
 | Metric | Value |
@@ -127,6 +160,21 @@ Output Layer (5 Classes)
 | Test Accuracy | **79.38%** |
 | Classes | 5 |
 | Framework | PyTorch |
+
+## ✨ Features
+
+- Custom CNN implementation
+- Transfer Learning using ResNet18
+- Data Augmentation
+- Weighted CrossEntropyLoss
+- Adam Optimizer
+- Model Checkpointing
+- Training History Logging
+- Accuracy and Loss Curves
+- Confusion Matrix Visualization
+- Classification Report
+- Single Image Prediction
+
 ## 📈 Training Accuracy
 
 ![Accuracy](outputs/graphs/accuracy_curve.png)
@@ -140,6 +188,24 @@ Output Layer (5 Classes)
 ---
 
 ## 🔲 Confusion Matrix
+
+![Confusion Matrix](outputs/graphs/confusion_matrix.png)
+
+## 📷 Visualizations
+
+### Training Accuracy
+
+![Accuracy](outputs/graphs/accuracy_curve.png)
+
+---
+
+### Training Loss
+
+![Loss](outputs/graphs/loss_curve.png)
+
+---
+
+### Confusion Matrix
 
 ![Confusion Matrix](outputs/graphs/confusion_matrix.png)
 ## 🔍 Predict a Single Image
@@ -182,14 +248,13 @@ Predict
 ```bash
 python src/predict.py
 ```
-## 🚀 Future Improvements
+## 🚀 Future Work
 
-- Transfer Learning using ResNet18
-- MobileNetV3 implementation
-- Real-time webcam inference
-- Flask/FastAPI deployment
-- Streamlit dashboard
-- Model comparison
+- MobileNetV3 Comparison
+- EfficientNet Comparison
+- Streamlit Web Application
+- Grad-CAM Visualization
+- Real-Time Webcam Prediction
 - 
 - ## 🛠️ Tech Stack
 - Python
