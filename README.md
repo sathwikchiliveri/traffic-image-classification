@@ -28,3 +28,28 @@ The complete pipeline includes:
 - Evaluation
 - Single image prediction
 - Performance visualization
+## 📂 Project Structure
+
+```text
+traffic-image-classification
+│
+├── Notebooks/
+├── outputs/
+│   └── graphs/
+│       ├── accuracy_curve.png
+│       ├── loss_curve.png
+│       └── confusion_matrix.png
+│
+├── src/
+│   ├── config.py
+│   ├── dataset.py
+│   ├── model.py
+│   ├── train.py
+│   ├── evaluate.py
+│   ├── predict.py
+│   └── graphs.py
+│
+├── requirements.txt
+├── README.md
+└── LICENSE
+```
