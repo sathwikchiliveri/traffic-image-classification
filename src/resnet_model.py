@@ -11,21 +11,40 @@ from torchvision import models
 
 
 class TrafficResNet(nn.Module):
+    """
+    ResNet18 Transfer Learning Model
+    """
 
     def __init__(self, num_classes=5):
 
         super(TrafficResNet, self).__init__()
 
-        # Load pretrained ResNet18
+        # =====================================================
+        # Load Pretrained ResNet18
+        # =====================================================
+
         self.model = models.resnet18(
             weights=models.ResNet18_Weights.DEFAULT
         )
 
-        # Freeze pretrained layers
+        # =====================================================
+        # Freeze Entire Network
+        # =====================================================
+
         for param in self.model.parameters():
             param.requires_grad = False
 
-        # Replace classifier
+        # =====================================================
+        # Unfreeze Last Residual Block (layer4)
+        # =====================================================
+
+        for param in self.model.layer4.parameters():
+            param.requires_grad = True
+
+        # =====================================================
+        # Replace Final Classifier
+        # =====================================================
+
         in_features = self.model.fc.in_features
 
         self.model.fc = nn.Sequential(
@@ -40,19 +59,50 @@ class TrafficResNet(nn.Module):
 
         )
 
+        # Make sure classifier is trainable
+
+        for param in self.model.fc.parameters():
+            param.requires_grad = True
+
+    # =====================================================
+    # Forward Pass
+    # =====================================================
+
     def forward(self, x):
 
         return self.model(x)
 
 
+# =====================================================
+# Test
+# =====================================================
+
 if __name__ == "__main__":
 
     model = TrafficResNet()
 
-    dummy = torch.randn(1, 3, 224, 224)
+    dummy_input = torch.randn(1, 3, 224, 224)
 
-    output = model(dummy)
+    output = model(dummy_input)
+
+    print("=" * 60)
+    print("ResNet18 Loaded Successfully")
+    print("=" * 60)
 
     print(model)
 
     print("\nOutput Shape:", output.shape)
+
+    trainable_params = sum(
+        p.numel()
+        for p in model.parameters()
+        if p.requires_grad
+    )
+
+    total_params = sum(
+        p.numel()
+        for p in model.parameters()
+    )
+
+    print(f"\nTrainable Parameters : {trainable_params:,}")
+    print(f"Total Parameters     : {total_params:,}")

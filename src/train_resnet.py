@@ -15,7 +15,7 @@ import torch.optim as optim
 from dataset_resnet import create_dataloaders
 from resnet_model import TrafficResNet
 from config import *
-
+RESNET_MODEL_PATH = MODEL_DIR / "traffic_resnet18.pth"
 
 # ==========================================================
 # Calculate Class Weights
@@ -246,7 +246,7 @@ def save_model(model, path):
 
     print("\nBest model saved successfully!")
 
-    print(MODEL_PATH)
+    print(RESNET_MODEL_PATH)
 
 
 # ==========================================================
@@ -314,8 +314,8 @@ criterion = nn.CrossEntropyLoss(
     )
 
 optimizer = optim.Adam(
-    model.model.fc.parameters(),
-    lr=0.001
+    filter(lambda p: p.requires_grad, model.parameters()),
+    lr=0.0001
 )
 
 print("\nLoss Function : Weighted CrossEntropyLoss")
@@ -433,8 +433,11 @@ for epoch in range(len(train_losses)):
 
 print("\nTraining completed successfully!")
 
-print(f"\nModel saved at:\n{MODEL_PATH}")
 
+
+print("Model saved at:")
+
+print(MODEL_DIR / "traffic_resnet18.pth")
 print(f"\nTraining history saved at:\n{LOG_DIR / 'training_history.csv'}")
 
 
