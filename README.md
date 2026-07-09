@@ -199,3 +199,6 @@ python src/predict.py
 - Pandas
 - Matplotlib
 - Scikit-learn
+- 
+- ## 📄 License
+This project is licensed under the MIT License.
