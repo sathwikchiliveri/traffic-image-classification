@@ -163,3 +163,22 @@ cd traffic-image-classification
 
 pip install -r requirements.txt
 ```
+## ▶️ Usage
+
+Train
+
+```bash
+python src/train.py
+```
+
+Evaluate
+
+```bash
+python src/evaluate.py
+```
+
+Predict
+
+```bash
+python src/predict.py
+```
