@@ -1,8 +1,8 @@
 """
 resnet_model.py
 
-Pretrained ResNet18 for
-Traffic Image Classification
+Transfer Learning using ResNet18
+for Traffic Image Classification
 """
 
 import torch
@@ -16,25 +16,16 @@ class TrafficResNet(nn.Module):
 
         super(TrafficResNet, self).__init__()
 
-        # ==========================================
-        # Load Pretrained ResNet18
-        # ==========================================
-
+        # Load pretrained ResNet18
         self.model = models.resnet18(
             weights=models.ResNet18_Weights.DEFAULT
         )
 
-        # ==========================================
-        # Freeze Feature Extractor
-        # ==========================================
-
+        # Freeze pretrained layers
         for param in self.model.parameters():
             param.requires_grad = False
 
-        # ==========================================
-        # Replace Final Layer
-        # ==========================================
-
+        # Replace classifier
         in_features = self.model.fc.in_features
 
         self.model.fc = nn.Sequential(
@@ -46,16 +37,13 @@ class TrafficResNet(nn.Module):
             nn.Dropout(0.5),
 
             nn.Linear(256, num_classes)
+
         )
 
     def forward(self, x):
 
         return self.model(x)
 
-
-# ==========================================
-# Test
-# ==========================================
 
 if __name__ == "__main__":
 
