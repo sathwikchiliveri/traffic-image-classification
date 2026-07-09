@@ -17,7 +17,7 @@ TEST_DIR = "Data/testing"
 # Image
 # ===============================
 
-IMAGE_SIZE = (224, 224)
+IMAGE_SIZE = (128, 128)
 
 # ===============================
 # Model
@@ -29,11 +29,11 @@ NUM_CLASSES = 5
 # Training
 # ===============================
 
-BATCH_SIZE = 16
+BATCH_SIZE = 8
 
 LEARNING_RATE = 0.001
 
-EPOCHS = 20
+EPOCHS = 2
 
 RANDOM_SEED = 42
 

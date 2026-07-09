@@ -9,19 +9,13 @@ Handles:
 
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
+
 from config import IMAGE_SIZE, BATCH_SIZE
 
-# ============================
-# Configuration
-# ============================
 
-#IMAGE_SIZE = (224, 224)
-#BATCH_SIZE = 32
-
-
-# ============================
+# =====================================================
 # Image Transformations
-# ============================
+# =====================================================
 
 train_transform = transforms.Compose([
     transforms.Resize(IMAGE_SIZE),
@@ -39,8 +33,9 @@ train_transform = transforms.Compose([
 ])
 
 
-test_transform = transforms.Compose([
+valid_test_transform = transforms.Compose([
     transforms.Resize(IMAGE_SIZE),
+
     transforms.ToTensor(),
 
     transforms.Normalize(
@@ -50,11 +45,14 @@ test_transform = transforms.Compose([
 ])
 
 
-# ============================
-# Dataset Loader
-# ============================
+# =====================================================
+# Load Datasets
+# =====================================================
 
 def load_datasets(train_path, valid_path, test_path):
+    """
+    Loads training, validation and testing datasets.
+    """
 
     train_dataset = datasets.ImageFolder(
         root=train_path,
@@ -63,41 +61,88 @@ def load_datasets(train_path, valid_path, test_path):
 
     valid_dataset = datasets.ImageFolder(
         root=valid_path,
-        transform=test_transform
+        transform=valid_test_transform
     )
 
     test_dataset = datasets.ImageFolder(
         root=test_path,
-        transform=test_transform
+        transform=valid_test_transform
     )
 
     return train_dataset, valid_dataset, test_dataset
 
 
-# ============================
-# DataLoader
-# ============================
+# =====================================================
+# Create DataLoaders
+# =====================================================
 
 def create_dataloaders(train_dataset,
                        valid_dataset,
                        test_dataset):
+    """
+    Creates DataLoaders for training, validation and testing.
+    Optimized for Windows + 8GB RAM.
+    """
 
     train_loader = DataLoader(
-        train_dataset,
+        dataset=train_dataset,
         batch_size=BATCH_SIZE,
-        shuffle=True
+        shuffle=True,
+        num_workers=0,
+        pin_memory=False
     )
 
     valid_loader = DataLoader(
-        valid_dataset,
+        dataset=valid_dataset,
         batch_size=BATCH_SIZE,
-        shuffle=False
+        shuffle=False,
+        num_workers=0,
+        pin_memory=False
     )
 
     test_loader = DataLoader(
-        test_dataset,
+        dataset=test_dataset,
         batch_size=BATCH_SIZE,
-        shuffle=False
+        shuffle=False,
+        num_workers=0,
+        pin_memory=False
     )
 
     return train_loader, valid_loader, test_loader
+
+
+# =====================================================
+# Test
+# =====================================================
+
+if __name__ == "__main__":
+
+    from config import TRAIN_DIR, VALID_DIR, TEST_DIR
+
+    train_dataset, valid_dataset, test_dataset = load_datasets(
+        TRAIN_DIR,
+        VALID_DIR,
+        TEST_DIR
+    )
+
+    train_loader, valid_loader, test_loader = create_dataloaders(
+        train_dataset,
+        valid_dataset,
+        test_dataset
+    )
+
+    print("=" * 50)
+    print("Dataset Loaded Successfully")
+    print("=" * 50)
+
+    print(f"Training Images   : {len(train_dataset)}")
+    print(f"Validation Images : {len(valid_dataset)}")
+    print(f"Testing Images    : {len(test_dataset)}")
+
+    print()
+
+    print(f"Training Batches   : {len(train_loader)}")
+    print(f"Validation Batches : {len(valid_loader)}")
+    print(f"Testing Batches    : {len(test_loader)}")
+
+    print("=" * 50)

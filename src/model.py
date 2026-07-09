@@ -17,9 +17,9 @@ class TrafficCNN(nn.Module):
     def __init__(self, num_classes=5):
         super(TrafficCNN, self).__init__()
 
-        # ==========================
+        # =====================================================
         # Feature Extractor
-        # ==========================
+        # =====================================================
 
         self.features = nn.Sequential(
 
@@ -30,13 +30,8 @@ class TrafficCNN(nn.Module):
                 kernel_size=3,
                 padding=1
             ),
-
             nn.ReLU(),
-
-            nn.MaxPool2d(
-                kernel_size=2,
-                stride=2
-            ),
+            nn.MaxPool2d(2),
 
             # Block 2
             nn.Conv2d(
@@ -45,13 +40,8 @@ class TrafficCNN(nn.Module):
                 kernel_size=3,
                 padding=1
             ),
-
             nn.ReLU(),
-
-            nn.MaxPool2d(
-                kernel_size=2,
-                stride=2
-            ),
+            nn.MaxPool2d(2),
 
             # Block 3
             nn.Conv2d(
@@ -60,37 +50,27 @@ class TrafficCNN(nn.Module):
                 kernel_size=3,
                 padding=1
             ),
-
             nn.ReLU(),
-
-            nn.MaxPool2d(
-                kernel_size=2,
-                stride=2
-            ),
+            nn.MaxPool2d(2)
         )
 
-        # ==========================
+        # =====================================================
         # Classifier
-        # ==========================
+        # =====================================================
 
         self.classifier = nn.Sequential(
 
+            nn.AdaptiveAvgPool2d((1, 1)),
+
             nn.Flatten(),
 
-            nn.Linear(
-                128 * 28 * 28,
-                512
-            ),
+            nn.Linear(128, 64),
 
             nn.ReLU(),
 
             nn.Dropout(0.5),
 
-            nn.Linear(
-                512,
-                num_classes
-            )
-
+            nn.Linear(64, num_classes)
         )
 
     def forward(self, x):
@@ -106,7 +86,7 @@ if __name__ == "__main__":
 
     model = TrafficCNN()
 
-    dummy_input = torch.randn(1, 3, 224, 224)
+    dummy_input = torch.randn(1, 3, 128, 128)
 
     output = model(dummy_input)
 
