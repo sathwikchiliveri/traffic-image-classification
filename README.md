@@ -120,3 +120,10 @@ Output Layer (5 Classes)
 | Optimizer | Adam |
 | Loss Function | Weighted CrossEntropyLoss |
 | Image Size | 128×128 |
+## 📊 Results
+
+| Metric | Value |
+|--------|------:|
+| Test Accuracy | **79.38%** |
+| Classes | 5 |
+| Framework | PyTorch |
