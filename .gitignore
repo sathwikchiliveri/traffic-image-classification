@@ -1,25 +1,52 @@
-# Python
-.venv/
-__pycache__/
-*.pyc
-
+# ===============================
 # Dataset
+# ===============================
+
 Data/
 
+# ===============================
+# Python
+# ===============================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ===============================
+# Virtual Environment
+# ===============================
+
+.venv/
+venv/
+env/
+
+# ===============================
 # Jupyter
+# ===============================
+
 .ipynb_checkpoints/
 
-# Outputs
-outputs/
-# Model checkpoints
+# ===============================
+# Model Checkpoints
+# ===============================
+
 outputs/models/
 
-# Training logs
+# ===============================
+# Training Logs
+# ===============================
+
 outputs/logs/
 
-# Prediction outputs
+# ===============================
+# Prediction Outputs
+# ===============================
+
 outputs/predictions/
 
-# Keep graphs
+# ===============================
+# Keep Graphs
+# ===============================
+
 !outputs/graphs/
 !outputs/graphs/*.png
