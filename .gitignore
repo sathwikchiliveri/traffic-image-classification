@@ -11,3 +11,15 @@ Data/
 
 # Outputs
 outputs/
+# Model checkpoints
+outputs/models/
+
+# Training logs
+outputs/logs/
+
+# Prediction outputs
+outputs/predictions/
+
+# Keep graphs
+!outputs/graphs/
+!outputs/graphs/*.png
