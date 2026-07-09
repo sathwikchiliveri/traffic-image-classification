@@ -1,10 +1,13 @@
 """
 train.py
 
-Training script for Traffic Image Classification
+Traffic Image Classification
+Training Script
 """
 
-import os
+import csv
+from collections import Counter
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -14,28 +17,131 @@ from model import TrafficCNN
 from config import *
 
 
-# =====================================================
-# Train One Epoch
-# =====================================================
+# ==========================================================
+# Calculate Class Weights
+# ==========================================================
 
-def train_one_epoch(model, train_loader, criterion, optimizer, device):
+def get_class_weights(train_dataset):
+
+    class_counts = Counter(train_dataset.targets)
+
+    print("\nDataset Distribution")
+    print("-" * 40)
+
+    for class_id, count in sorted(class_counts.items()):
+        print(f"Class {class_id} : {count}")
+
+    total_samples = len(train_dataset)
+    num_classes = len(class_counts)
+
+    weights = []
+
+    for class_id in range(num_classes):
+
+        weight = total_samples / (
+            num_classes * class_counts[class_id]
+        )
+
+        weights.append(weight)
+
+    weights = torch.tensor(
+        weights,
+        dtype=torch.float32
+    )
+
+    weights = weights.to(DEVICE)
+
+    print("\nClass Weights")
+    print("-" * 40)
+
+    for class_id, weight in enumerate(weights):
+        print(f"Class {class_id} : {weight:.3f}")
+
+    return weights
+
+
+# ==========================================================
+# Save Training History
+# ==========================================================
+
+def save_training_history(
+    train_losses,
+    train_accuracies,
+    valid_losses,
+    valid_accuracies
+):
+
+    LOG_DIR.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    history_file = LOG_DIR / "training_history.csv"
+
+    with open(
+        history_file,
+        "w",
+        newline=""
+    ) as file:
+
+        writer = csv.writer(file)
+
+        writer.writerow([
+            "Epoch",
+            "Train Loss",
+            "Train Accuracy",
+            "Validation Loss",
+            "Validation Accuracy"
+        ])
+
+        for epoch in range(len(train_losses)):
+
+            writer.writerow([
+                epoch + 1,
+                train_losses[epoch],
+                train_accuracies[epoch],
+                valid_losses[epoch],
+                valid_accuracies[epoch]
+            ])
+
+    print("\nTraining history saved.")
+
+    print(history_file)
+
+
+# ==========================================================
+# Train One Epoch
+# ==========================================================
+
+def train_one_epoch(
+    model,
+    train_loader,
+    criterion,
+    optimizer
+):
 
     model.train()
 
     running_loss = 0.0
+
     correct = 0
+
     total = 0
 
     for batch_idx, (images, labels) in enumerate(train_loader):
 
-        images = images.to(device)
-        labels = labels.to(device)
+        images = images.to(DEVICE)
+
+        labels = labels.to(DEVICE)
 
         optimizer.zero_grad()
 
         outputs = model(images)
 
-        loss = criterion(outputs, labels)
+        loss = criterion(
+            outputs,
+            labels
+        )
 
         loss.backward()
 
@@ -43,85 +149,116 @@ def train_one_epoch(model, train_loader, criterion, optimizer, device):
 
         running_loss += loss.item()
 
-        _, predicted = torch.max(outputs, 1)
+        _, predicted = torch.max(
+            outputs,
+            1
+        )
 
         total += labels.size(0)
 
-        correct += (predicted == labels).sum().item()
+        correct += (
+            predicted == labels
+        ).sum().item()
+
         if (batch_idx + 1) % 20 == 0:
-         print(
-        f"Batch [{batch_idx + 1}/{len(train_loader)}] "
-        f"Loss: {loss.item():.4f}"
-         )
+
+            print(
+                f"Batch [{batch_idx+1}/{len(train_loader)}] "
+                f"Loss : {loss.item():.4f}"
+            )
 
     epoch_loss = running_loss / len(train_loader)
+
     epoch_accuracy = 100 * correct / total
 
     return epoch_loss, epoch_accuracy
+# ==========================================================
+# Validate One Epoch
+# ==========================================================
 
-
-# =====================================================
-# Validation
-# =====================================================
-
-def validate_one_epoch(model, valid_loader, criterion, device):
+def validate_one_epoch(
+    model,
+    valid_loader,
+    criterion
+):
 
     model.eval()
 
     running_loss = 0.0
+
     correct = 0
+
     total = 0
 
     with torch.no_grad():
 
         for images, labels in valid_loader:
 
-            images = images.to(device)
-            labels = labels.to(device)
+            images = images.to(DEVICE)
+
+            labels = labels.to(DEVICE)
 
             outputs = model(images)
 
-            loss = criterion(outputs, labels)
+            loss = criterion(
+                outputs,
+                labels
+            )
 
             running_loss += loss.item()
 
-            _, predicted = torch.max(outputs, 1)
+            _, predicted = torch.max(
+                outputs,
+                1
+            )
 
             total += labels.size(0)
 
-            correct += (predicted == labels).sum().item()
+            correct += (
+                predicted == labels
+            ).sum().item()
 
     epoch_loss = running_loss / len(valid_loader)
+
     epoch_accuracy = 100 * correct / total
 
     return epoch_loss, epoch_accuracy
 
 
-# =====================================================
-# Save Model
-# =====================================================
+# ==========================================================
+# Save Best Model
+# ==========================================================
 
-def save_model(model, path):
+def save_model(model):
 
-    folder = os.path.dirname(path)
+    MODEL_DIR.mkdir(
+        parents=True,
+        exist_ok=True
+    )
 
-    os.makedirs(folder, exist_ok=True)
+    torch.save(
+        model.state_dict(),
+        MODEL_PATH
+    )
 
-    torch.save(model.state_dict(), path)
+    print("\nBest model saved successfully!")
 
-    print(f"\nModel saved successfully!")
-    print(path)
+    print(MODEL_PATH)
 
 
-# =====================================================
-# Main Function
-# =====================================================
+# ==========================================================
+# Main
+# ==========================================================
 
 def main():
 
     print("=" * 60)
     print("Traffic Image Classification")
     print("=" * 60)
+
+    # ------------------------------------------------------
+    # Load Dataset
+    # ------------------------------------------------------
 
     print("\nLoading datasets...")
 
@@ -137,6 +274,10 @@ def main():
     print(f"Validation Images : {len(valid_dataset)}")
     print(f"Testing Images    : {len(test_dataset)}")
 
+    # ------------------------------------------------------
+    # DataLoaders
+    # ------------------------------------------------------
+
     print("\nCreating DataLoaders...")
 
     train_loader, valid_loader, test_loader = create_dataloaders(
@@ -151,6 +292,10 @@ def main():
     print(f"Validation Batches : {len(valid_loader)}")
     print(f"Testing Batches    : {len(test_loader)}")
 
+    # ------------------------------------------------------
+    # Model
+    # ------------------------------------------------------
+
     print("\nLoading CNN Model...")
 
     model = TrafficCNN()
@@ -159,26 +304,39 @@ def main():
 
     print("CNN Loaded Successfully!")
 
-    criterion = nn.CrossEntropyLoss()
+    # ------------------------------------------------------
+    # Weighted Loss
+    # ------------------------------------------------------
+
+    class_weights = get_class_weights(
+        train_dataset
+    )
+
+    criterion = nn.CrossEntropyLoss(
+        weight=class_weights
+    )
 
     optimizer = optim.Adam(
         model.parameters(),
         lr=LEARNING_RATE
     )
 
-    print("Loss Function : CrossEntropyLoss")
+    print("\nLoss Function : Weighted CrossEntropyLoss")
+
     print("Optimizer     : Adam")
 
     best_accuracy = 0.0
 
     train_losses = []
+
     train_accuracies = []
 
     valid_losses = []
+
     valid_accuracies = []
-        # =====================================================
+        # ==========================================================
     # Training Loop
-    # =====================================================
+    # ==========================================================
 
     print("\nStarting Training...\n")
 
@@ -188,27 +346,25 @@ def main():
         print(f"Epoch [{epoch + 1}/{EPOCHS}]")
         print("=" * 60)
 
-        # -------------------------------
+        # ---------------------------
         # Train
-        # -------------------------------
+        # ---------------------------
 
         train_loss, train_accuracy = train_one_epoch(
             model,
             train_loader,
             criterion,
-            optimizer,
-            DEVICE
+            optimizer
         )
 
-        # -------------------------------
+        # ---------------------------
         # Validation
-        # -------------------------------
+        # ---------------------------
 
         valid_loss, valid_accuracy = validate_one_epoch(
             model,
             valid_loader,
-            criterion,
-            DEVICE
+            criterion
         )
 
         train_losses.append(train_loss)
@@ -217,32 +373,47 @@ def main():
         valid_losses.append(valid_loss)
         valid_accuracies.append(valid_accuracy)
 
-        print(f"Train Loss     : {train_loss:.4f}")
-        print(f"Train Accuracy : {train_accuracy:.2f}%")
+        print("\nEpoch Summary")
+        print("-" * 40)
 
-        print(f"Valid Loss     : {valid_loss:.4f}")
-        print(f"Valid Accuracy : {valid_accuracy:.2f}%")
+        print(f"Training Loss       : {train_loss:.4f}")
+        print(f"Training Accuracy   : {train_accuracy:.2f}%")
 
-        # -------------------------------
+        print(f"Validation Loss     : {valid_loss:.4f}")
+        print(f"Validation Accuracy : {valid_accuracy:.2f}%")
+
+        # ---------------------------
         # Save Best Model
-        # -------------------------------
+        # ---------------------------
 
         if valid_accuracy > best_accuracy:
 
             best_accuracy = valid_accuracy
 
-            save_model(
-                model,
-                MODEL_PATH
-            )
+            save_model(model)
 
             print("Best model updated!")
 
+        else:
+
+            print("Validation accuracy did not improve.")
+
         print()
 
-    # =====================================================
-    # Training Summary
-    # =====================================================
+    # ==========================================================
+    # Save Training History
+    # ==========================================================
+
+    save_training_history(
+        train_losses,
+        train_accuracies,
+        valid_losses,
+        valid_accuracies
+    )
+
+    # ==========================================================
+    # Final Summary
+    # ==========================================================
 
     print("=" * 60)
     print("Training Finished")
@@ -250,19 +421,28 @@ def main():
 
     print(f"Best Validation Accuracy : {best_accuracy:.2f}%")
 
-    print("\nTraining Complete!")
+    print("\nTraining History")
 
-    return {
-        "train_loss": train_losses,
-        "train_accuracy": train_accuracies,
-        "valid_loss": valid_losses,
-        "valid_accuracy": valid_accuracies,
-    }
+    for epoch in range(len(train_losses)):
+
+        print(
+            f"Epoch {epoch + 1:02d} | "
+            f"Train Loss: {train_losses[epoch]:.4f} | "
+            f"Train Acc: {train_accuracies[epoch]:.2f}% | "
+            f"Valid Loss: {valid_losses[epoch]:.4f} | "
+            f"Valid Acc: {valid_accuracies[epoch]:.2f}%"
+        )
+
+    print("\nTraining completed successfully!")
+
+    print(f"\nModel saved at:\n{MODEL_PATH}")
+
+    print(f"\nTraining history saved at:\n{LOG_DIR / 'training_history.csv'}")
 
 
-# =====================================================
+# ==========================================================
 # Entry Point
-# =====================================================
+# ==========================================================
 
 if __name__ == "__main__":
     main()
